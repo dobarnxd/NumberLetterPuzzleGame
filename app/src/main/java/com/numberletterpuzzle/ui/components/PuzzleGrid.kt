@@ -118,17 +118,21 @@ fun PuzzleGrid(
                         transformOrigin = TransformOrigin(0f, 0f)
                     }
             ) {
-                for (row in puzzle.grid) {
-                    Row {
-                        for (cell in row) {
-                            GridCell(
-                                cell        = cell,
-                                cellSize    = fittedCellSize,
-                                userLetter  = if (!cell.isBlocked) userMapping[cell.number] else null,
-                                isSelected  = !cell.isBlocked && cell.number == selectedNumber,
-                                isPreFilled = !cell.isBlocked && cell.number != null && cell.number in preFilledNumbers,
-                                isWrong     = !cell.isBlocked && cell.number != null && cell.number in wrongNumbers
-                            )
+                for ((rowIdx, row) in puzzle.grid.withIndex()) {
+                    key(rowIdx) {
+                        Row {
+                            for ((colIdx, cell) in row.withIndex()) {
+                                key(colIdx) {
+                                    GridCell(
+                                        cell        = cell,
+                                        cellSize    = fittedCellSize,
+                                        userLetter  = if (!cell.isBlocked) userMapping[cell.number] else null,
+                                        isSelected  = !cell.isBlocked && cell.number == selectedNumber,
+                                        isPreFilled = !cell.isBlocked && cell.number != null && cell.number in preFilledNumbers,
+                                        isWrong     = !cell.isBlocked && cell.number != null && cell.number in wrongNumbers
+                                    )
+                                }
+                            }
                         }
                     }
                 }

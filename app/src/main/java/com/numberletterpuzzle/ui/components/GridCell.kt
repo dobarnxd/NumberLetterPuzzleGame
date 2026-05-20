@@ -33,15 +33,10 @@ fun GridCell(
     val letterLineHeight = (letterFontSize.value + 1f).sp
 
     if (cell.isBlocked) {
-        val bgColor by animateColorAsState(
-            targetValue = colors.blockedCell,
-            animationSpec = tween(200),
-            label = "blockedBg"
-        )
         Box(
             modifier = Modifier
                 .size(cellSize)
-                .background(bgColor)
+                .background(colors.blockedCell)
                 .border(0.5.dp, colors.blockedCellBorder)
         )
     } else {

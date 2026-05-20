@@ -29,7 +29,8 @@ data class PuzzleUiState(
     val mistakeCount: Int = 0,
     val hintCount: Int = 0,
     val solutionRevealed: Boolean = false,
-    val showResultDialog: Boolean = false
+    val showResultDialog: Boolean = false,
+    val wrongNumbers: Set<Int> = emptySet()
 )
 
 class PuzzleViewModel(
@@ -87,7 +88,8 @@ class PuzzleViewModel(
             s.copy(
                 userMapping = map,
                 isSolved = false,
-                mistakeCount = s.mistakeCount + addedMistake
+                mistakeCount = s.mistakeCount + addedMistake,
+                wrongNumbers = s.wrongNumbers - number
             )
         }
     }
@@ -100,7 +102,7 @@ class PuzzleViewModel(
         _uiState.update { s ->
             val map = s.userMapping.toMutableMap()
             map.remove(number)
-            s.copy(userMapping = map, isSolved = false)
+            s.copy(userMapping = map, isSolved = false, wrongNumbers = s.wrongNumbers - number)
         }
     }
 
@@ -125,13 +127,19 @@ class PuzzleViewModel(
                 it.copy(
                     isSolved = true,
                     mistakeCount = it.mistakeCount + addedMistakes,
-                    showResultDialog = true
+                    showResultDialog = true,
+                    wrongNumbers = emptySet()
                 )
             }
             saveGameResult(revealed = false)
         } else {
+            val wrongNums = result.incorrectCells.mapNotNull { (row, col) ->
+                val cell = state.puzzle.grid[row][col]
+                val num = cell.number ?: return@mapNotNull null
+                if (state.userMapping.containsKey(num)) num else null
+            }.toSet()
             _uiState.update {
-                it.copy(mistakeCount = it.mistakeCount + addedMistakes)
+                it.copy(mistakeCount = it.mistakeCount + addedMistakes, wrongNumbers = wrongNums)
             }
         }
     }
@@ -205,7 +213,8 @@ class PuzzleViewModel(
             puzzle           = newPuzzle,
             userMapping      = newPreFilledMap,
             preFilledNumbers = newPreFilled,
-            elapsedSeconds   = 0L
+            elapsedSeconds   = 0L,
+            wrongNumbers     = emptySet()
         )
         startTimer()
     }

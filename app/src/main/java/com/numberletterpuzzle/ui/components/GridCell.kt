@@ -23,7 +23,8 @@ fun GridCell(
     cellSize: Dp,
     userLetter: Char?,
     isSelected: Boolean,
-    isPreFilled: Boolean = false
+    isPreFilled: Boolean = false,
+    isWrong: Boolean = false
 ) {
     val colors = LocalPuzzleColors.current
     val numberFontSize = (cellSize.value * 0.20f).coerceIn(6f, 12f).sp
@@ -46,6 +47,7 @@ fun GridCell(
     } else {
         val targetBg = when {
             isSelected  -> colors.selectedCell
+            isWrong     -> colors.wrongCell
             isPreFilled -> colors.preFilledCell
             else        -> colors.cellBackground
         }

@@ -102,6 +102,7 @@ fun PuzzleScreen(
                         userMapping = state.userMapping,
                         selectedNumber = state.selectedNumber,
                         preFilledNumbers = state.preFilledNumbers,
+                        wrongNumbers = state.wrongNumbers,
                         onCellClick = { puzzleViewModel.selectNumber(it) },
                         modifier = Modifier.padding(4.dp)
                     )

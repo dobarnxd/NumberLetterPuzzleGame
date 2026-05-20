@@ -22,7 +22,8 @@ fun PuzzleGrid(
     selectedNumber: Int?,
     onCellClick: (number: Int) -> Unit,
     modifier: Modifier = Modifier,
-    preFilledNumbers: Set<Int> = emptySet()
+    preFilledNumbers: Set<Int> = emptySet(),
+    wrongNumbers: Set<Int> = emptySet()
 ) {
     val numCols = if (puzzle.grid.isNotEmpty()) puzzle.grid[0].size else 1
     val numRows = if (puzzle.grid.isEmpty()) 1 else puzzle.grid.size
@@ -121,11 +122,12 @@ fun PuzzleGrid(
                     Row {
                         for (cell in row) {
                             GridCell(
-                                cell             = cell,
-                                cellSize         = fittedCellSize,
-                                userLetter       = if (!cell.isBlocked) userMapping[cell.number] else null,
-                                isSelected       = !cell.isBlocked && cell.number == selectedNumber,
-                                isPreFilled      = !cell.isBlocked && cell.number != null && cell.number in preFilledNumbers
+                                cell        = cell,
+                                cellSize    = fittedCellSize,
+                                userLetter  = if (!cell.isBlocked) userMapping[cell.number] else null,
+                                isSelected  = !cell.isBlocked && cell.number == selectedNumber,
+                                isPreFilled = !cell.isBlocked && cell.number != null && cell.number in preFilledNumbers,
+                                isWrong     = !cell.isBlocked && cell.number != null && cell.number in wrongNumbers
                             )
                         }
                     }
